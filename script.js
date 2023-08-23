@@ -86,7 +86,7 @@ button.addEventListener("click", function (e) {
   let titulo = document.getElementById("input_title");
 
   let valueTitle = titulo.value;
-
+  
   // PEGANDO PRIORIDADE
   let prioridade = document.querySelector("#input_priority");
   let valuePriority = prioridade.value;
@@ -102,12 +102,14 @@ button.addEventListener("click", function (e) {
 const inputPesquisa = document.querySelector("#pesquisa");
 // colocando um evento no input
 inputPesquisa.addEventListener("input", function (e) {
-  let textoInput = e.target.value;
-//filtrando os titulos do array
+  let textoInput = e.target.value.toLowerCase();
+  // textoInput.
+  //filtrando os titulos do array
   const meuNovoArray = tasks.filter((itens) => {
     //verificadno se o que tem no array é igual ao que está no input
-    let textPesquisado = itens.title.includes(textoInput);
-
+    let textPesquisado = itens.title.toLowerCase().includes(textoInput);
+    
+    console.log(itens)
     return textPesquisado;
   });
   // passando o novo array como parametro.
