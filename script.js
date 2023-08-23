@@ -1,21 +1,7 @@
-const tasks = [
-  {
-    title: "Comprar comida para o gato",
-    type: "Urgente",
-  },
-  {
-    title: "Consertar Computador",
-    type: "Prioritário",
-  },
-  {
-    title: "Beber água",
-    type: "Normal",
-  }
-];
+let tasks = [];
 
-// tasks[1].title.indexOf(tasks[1].title)
 
-function createCard(taskInfo) {
+const createCard = (taskInfo, index) => {
   // Criando elementos necessários
   const taskCardItem = document.createElement("li");
   const taskCardContent = document.createElement("div");
@@ -39,24 +25,14 @@ function createCard(taskInfo) {
     taskTitle.classList.add("span-normal");
   }
 
-  // Criando botão para deletar tarefa
-  const buttonDelete = document.createElement("button");
-
-  // Adicionando icone ao botão
+   // Criando botão para deletar tarefa
+   const buttonDelete = document.createElement("button");
+  
+   // adicionando id
+   buttonDelete.classList.add('deleteBtt')
+   buttonDelete.id = index
+   // Adicionando icone ao botão
   buttonDelete.innerHTML = '<i class="fa fa-trash" aria-hidden="true"></i>';
-
-  //criando evento botão deletar
-  buttonDelete.addEventListener("click", function (e) {
-    let index = 0;
-    for (let i = 0; i < tasks.length; i++) {
-      if (tasks[i].title == taskInfo.title) {
-        index = i;
-        console.log(e.target.parentElement);
-      }
-    }
-    tasks.splice(index, 1);
-    renderElements(tasks);
-  });
 
   /// Adicionando a div e o botão de deletar ao list item
   taskCardItem.appendChild(taskCardContent);
@@ -65,55 +41,114 @@ function createCard(taskInfo) {
   return taskCardItem;
 }
 
-function renderElements(taskList) {
+const renderTask = (taskList) => {
   const htmlList = document.querySelector(".tasks");
   htmlList.innerHTML = "";
 
-  // Ajustar a lógica
-
-  for (let i = 0; i < tasks.length; i++) {
-    let card = createCard(taskList[i]);
+  // Ajustar a lógica   
+  
+  for (let i = 0; i < taskList.length; i++) {
+    
+    const card = createCard(taskList[i],i);
     htmlList.appendChild(card);
   }
+
+
 }
 
-let button = document.querySelector("#btnSubmit");
+const addTask = ()=>{
+  const button = document.querySelector("#btnSubmit");
 
-button.addEventListener("click", function (e) {
-  e.preventDefault();
-
-  // Pegandoo a Tarefa
-  let titulo = document.getElementById("input_title");
-
-  let valueTitle = titulo.value;
+  button.addEventListener("click", function (e) {
+    e.preventDefault();
   
-  // PEGANDO PRIORIDADE
-  let prioridade = document.querySelector("#input_priority");
-  let valuePriority = prioridade.value;
-
-  tasks.push({ title: valueTitle, type: valuePriority });
-
-  renderElements(tasks);
-  titulo.value = "";
-});
-
-// chamando o input de pesquisa
-
-const inputPesquisa = document.querySelector("#pesquisa");
-// colocando um evento no input
-inputPesquisa.addEventListener("input", function (e) {
-  let textoInput = e.target.value.toLowerCase();
-  // textoInput.
-  //filtrando os titulos do array
-  const meuNovoArray = tasks.filter((itens) => {
-    //verificadno se o que tem no array é igual ao que está no input
-    let textPesquisado = itens.title.toLowerCase().includes(textoInput);
+    // Pegandoo a Tarefa
+    let titulo = document.getElementById("input_title");
+  
+    let valueTitle = titulo.value;
     
-    console.log(itens)
-    return textPesquisado;
-  });
-  // passando o novo array como parametro.
-  renderElements(meuNovoArray);
-});
+    // PEGANDO PRIORIDADE
+    let prioridade = document.querySelector("#input_priority");
+    let valuePriority = prioridade.value;
+  
+    const push = tasks.push({ title: valueTitle, type: valuePriority });
 
-renderElements(tasks);
+    localStorage.setItem('tasksList', JSON.stringify(tasks))
+    
+    renderTask(tasks);
+    removeTask()
+    titulo.value = "";
+    return push
+  });
+}
+
+const removeTask = ()=>{
+
+  const deleteButton = document.querySelectorAll(".deleteBtt")
+  //criando evento botão deletar
+
+  deleteButton.forEach((btt)=>{
+
+    btt.addEventListener("click",(e)=> {
+      
+      console.log(e)
+      let index = 0;
+      for (let i = 0; i < tasks.length; i++) {
+        tasks.splice(index, 1);
+
+        console.log(tasks)
+        renderTask(tasks);
+      }
+      localStorage.setItem('tasksList', JSON.stringify(tasks))
+
+      if(tasks.length === 0){
+        localStorage.clear()
+      }
+      removeTask(tasks)
+    });
+  })
+
+}
+
+const filterTask = ()=>{
+
+  // chamando o input de pesquisa
+  
+  const inputPesquisa = document.querySelector("#pesquisa");
+  // colocando um evento no input
+  inputPesquisa.addEventListener("input", function (e) {
+    let textoInput = e.target.value.toLowerCase();
+    // textoInput.
+    //filtrando os titulos do array
+    const meuNovoArray = tasks.filter((itens) => {
+      //verificadno se o que tem no array é igual ao que está no input
+      let textPesquisado = itens.title.toLowerCase().includes(textoInput);
+      
+      console.log(itens)
+      return textPesquisado;
+    });
+    // passando o novo array como parametro.
+    renderTask(meuNovoArray);
+  });
+}
+
+const readLocalStorage = ()=>{
+  const getArray = localStorage.getItem('tasksList')
+
+  if(getArray){
+    const arrayParse = JSON.parse(getArray);
+
+    arrayParse.forEach(task => 
+      tasks.push(task))
+
+    renderTask(tasks)
+
+  }
+  
+}
+
+
+addTask()
+readLocalStorage()
+removeTask()
+filterTask()  
