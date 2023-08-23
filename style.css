@@ -78,7 +78,7 @@ section h2{
   color:rgb(255,255,255)
 }
 
-.tasks li div span{
+.tasks__container li div span{
   display: block;
   height: 8px;
   width: 8px;
@@ -86,19 +86,19 @@ section h2{
   background: black;
 }
 
-.tasks li div .span-urgent{
+.tasks__container li div .span-urgent{
   background: red;
 }
 
-.tasks li div .span-priority{
+.tasks__container li div .span-priority{
   background: rgb(255, 174, 0);
 }
 
-.tasks li div .span-normal{
+.tasks__container li div .span-normal{
   background: green;
 }
 
-.tasks li{
+.tasks__container li{
   display: flex;
   justify-content: space-between;
   background: rgb(233, 232, 232);
@@ -107,16 +107,16 @@ section h2{
   margin: 10px 0;
 }
 
-.tasks li div{
+.tasks__container li div{
   display: flex;
   align-items: center;
 }
 
-.tasks li div span{
+.tasks__container li div span{
   margin: 0 8px;
 }
 
-.tasks li button{
+.tasks__container li button{
   border: none;
   background:rgb(220, 220, 220);
   color:rgb(150, 150, 150);
